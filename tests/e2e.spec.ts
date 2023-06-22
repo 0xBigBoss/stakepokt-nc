@@ -116,8 +116,6 @@ test('test', async ({ page }) => {
 
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    console.log('generatedTxHashes', generatedTxHashes)
-
     // Verify that the generated transaction hashes are present on the page
     for (const txHash of generatedTxHashes) {
         // Expect the txHash to be visible on the page

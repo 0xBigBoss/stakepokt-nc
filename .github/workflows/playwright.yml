@@ -18,6 +18,8 @@ jobs:
                   version: 8.6.3
             - name: Install dependencies
               run: pnpm install
+            - name: Build app
+              run: pnpm build
             - name: Install Playwright Browsers
               run: pnpm exec playwright install --with-deps
             - name: Run Playwright tests

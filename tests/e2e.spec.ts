@@ -72,7 +72,9 @@ test('test', async ({ page }) => {
     await nextBtn.scrollIntoViewIfNeeded()
     await nextBtn.click()
 
-    expect(page.getByText('Wallet Balance: 1000000000.000000')).toBeTruthy()
+    expect(
+        await page.getByText('Wallet Balance: 1000000000.000000').count()
+    ).toBe(1)
 
     // find by testid id additional-transfer-amount
     await page.getByTestId('additional-transfer-amount').fill('5')

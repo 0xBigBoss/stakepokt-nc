@@ -68,16 +68,18 @@ test('test', async ({ page }) => {
         }
     )
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    let nextBtn = page.getByRole('button', { name: 'Next' })
+    await nextBtn.scrollIntoViewIfNeeded()
+    await nextBtn.click()
 
-    expect(
-        await page.getByText('Wallet Balance: 1000000000.000000')
-    ).toBeTruthy()
+    expect(page.getByText('Wallet Balance: 1000000000.000000')).toBeTruthy()
 
     // find by testid id additional-transfer-amount
     await page.getByTestId('additional-transfer-amount').fill('5')
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    nextBtn = page.getByRole('button', { name: 'Next' })
+    await nextBtn.scrollIntoViewIfNeeded()
+    await nextBtn.click()
 
     expect(await page.isVisible('text=Nodes to Stake: 3')).toBeTruthy()
 
@@ -110,7 +112,9 @@ test('test', async ({ page }) => {
         }
     )
 
-    await page.getByRole('button', { name: "Yes, I'm ready to stake" }).click()
+    let stakeBtn = page.getByRole('button', { name: "Yes, I'm ready to stake" })
+    await stakeBtn.scrollIntoViewIfNeeded()
+    await stakeBtn.click()
 
     expect(await page.isVisible('text=Staking results')).toBeTruthy()
 
@@ -149,8 +153,12 @@ test('test', async ({ page }) => {
         }
     })
 
-    // Click the Export button to start the download
-    await page.click('text=Export')
+    // Click the Export link to start the download
+    let exportBtn = page.getByRole('link', {
+        name: 'Export',
+    })
+    await exportBtn.scrollIntoViewIfNeeded()
+    await exportBtn.click()
 
     // Optional: Add a delay to ensure the download handler has time to execute
     await page.waitForTimeout(2000)

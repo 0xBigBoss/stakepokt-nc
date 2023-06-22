@@ -100,13 +100,6 @@ test('test', async ({ page }) => {
                 })
                 return
             }
-
-            console.log('received rawtx request', {
-                method: route.request().method(),
-                postData: route.request().postData(),
-                headers: route.request().headers(),
-            })
-
             // return a random txhash
             const json = {
                 logs: null,
@@ -131,5 +124,36 @@ test('test', async ({ page }) => {
         expect(await page.isVisible(`text=${txHash}`)).toBeTruthy()
     }
 
-    await page.getByRole('button', { name: 'Next' }).click()
+    // Intercept download event
+    page.on('download', async (download) => {
+        // Wait for the download to complete
+        const downloadPath = await download.path()
+        if (downloadPath) {
+            // Read the content of the downloaded file
+            const content = fs.readFileSync(downloadPath, 'utf8')
+
+            // Split content into lines
+            const lines = content.trim().split('\n')
+
+            // Iterate through lines (skipping the header)
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i]
+                const columns = line.split(',')
+
+                // Extract transaction hashes from the CSV
+                const stakeTxHash = columns[2].trim()
+                const transferTxHash = columns[3].trim()
+
+                // Check that the hashes are in the generatedTxHashes array
+                expect(generatedTxHashes).toContain(stakeTxHash)
+                expect(generatedTxHashes).toContain(transferTxHash)
+            }
+        }
+    })
+
+    // Click the Export button to start the download
+    await page.click('text=Export')
+
+    // Optional: Add a delay to ensure the download handler has time to execute
+    await page.waitForTimeout(2000)
 })

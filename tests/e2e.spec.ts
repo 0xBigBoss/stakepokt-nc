@@ -71,7 +71,7 @@ test('test', async ({ page }) => {
     await page.getByRole('button', { name: 'Next' }).click()
 
     expect(
-        await page.isVisible('text=Wallet Balance: 1000000000.000000')
+        await page.getByText('Wallet Balance: 1000000000.000000')
     ).toBeTruthy()
 
     // find by testid id additional-transfer-amount
